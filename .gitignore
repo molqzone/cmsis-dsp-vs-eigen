@@ -1,0 +1,5 @@
+build/**
+.history/**
+.cache/**
+.config.yaml
+CMakeFiles/**
