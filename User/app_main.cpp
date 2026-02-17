@@ -104,6 +104,15 @@ extern "C" void app_main(void)
 #if defined(BENCHMARK_AUTORUN)
   osDelay(200);
 #if defined(BENCHMARK_AUTORUN_FORCE)
+  // Give host-side serial collector time to reopen after flashing/reset.
+  for (int wait_tick = 0; wait_tick < 300; ++wait_tick)
+  {
+    if (cdc_uart.IsDtrSet())
+    {
+      break;
+    }
+    osDelay(10);
+  }
   STDIO::Printf("autorun-force\n");
 #else
   while (!cdc_uart.IsDtrSet())

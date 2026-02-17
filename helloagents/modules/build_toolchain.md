@@ -14,6 +14,7 @@
 | CMakePreset: Debug | 无 | 构建配置 | 使用 `starm-clang` 生成调试构建 |
 | CMakePreset: Release | 无 | 构建配置 | 使用 `starm-clang` 生成发布构建 |
 | starm-clang toolchain | 无 | 工具链配置 | 定义 `cortex-m4`、FPU、链接脚本等参数 |
+| run_full_matrix.py tool options | `--cube-cmake`,`--cube`,`--toolchain-bin`,`--jlink` | 运行时路径绑定 | 绑定 VSCode Cube 工具链与 JLink 命令路径 |
 
 ### 数据结构
 | 字段 | 类型 | 说明 |
@@ -36,6 +37,11 @@
 **行为**: 应用 `-mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard` 等工具链参数  
 **结果**: 生成可在目标芯片运行的 ELF 映像
 
+### 编译条件矩阵执行
+**条件**: 触发全量实验流水线（C1~C10）  
+**行为**: 每个 profile 使用独立构建目录 `build/bench_matrix/<C#>/build` 与 profile 专属 `CMAKE_*_FLAGS_RELEASE`  
+**结果**: 保证不同编译条件相互隔离且可追溯，产物与日志按 profile 划分
+
 ## 依赖关系
 
 ```yaml
@@ -45,4 +51,3 @@
   - firmware_runtime
   - benchmark_experiment
 ```
-

@@ -1,0 +1,2 @@
+group_id,profiles,mul_pattern,mul_cross,inv_pattern,inv_cross,gmean_min,gmean_max,signature
+G1,"C1,C10,C11,C2,C3,C4,C5,C6,C7,C8,C9",CCCCCCCC,none,CCCCC,none,14.92245661791011,15.019070261860087,mul:CCCCCCCC:cross=none|inv:CCCCC:cross=none

@@ -12,6 +12,8 @@
 | 函数/方法 | 参数 | 返回值 | 说明 |
 |----------|------|--------|------|
 | BenchmarkRunner::RunAllBenchmarks | `build_mode` | `void` | 固定顺序执行乘法全尺寸与求逆子集并输出 CSV |
+| benchmark_analysis/run_full_matrix.py | `--profiles`,`--runs`,`--resume` 等 | `exit code` | 一键执行 C1~C10 构建/烧录/采样并触发报告生成 |
+| benchmark_analysis/generate_full_matrix_report.py | `--input-root`,`--output-md`,`--strict` | `exit code` | 聚合 C1~C10 样本并生成 `report_full_matrix.md` |
 | BenchmarkDwt::InitDwtCycleCounter | `void` | `void` | 初始化 DWT 周期计数器 |
 | BenchmarkDwt::MeasureTimerOverhead | `void` | `uint32_t` | 采样计时本底开销 |
 | BenchmarkDwt::MeasureCyclesCriticalSection | `lambda` | `uint32_t` | PRIMASK 保护下测量单次运算周期 |
@@ -43,6 +45,16 @@
 **条件**: USB CDC 已连通且主机端 DTR 已置位  
 **行为**: 先打印 Debug 警示，再打印 CSV 表头与数据行，最后打印 `done`  
 **结果**: 形成可直接采集的统一文本结果流
+
+### 全量矩阵自动化
+**条件**: `build/bench_matrix/<C#>/` 尚未完整或用户指定 `--resume`  
+**行为**: 对 C1~C10 执行构建→JLink 烧录→串口采样，单 profile 失败即中止并保留日志；全部成功后生成 `report_full_matrix.md` 并同步 `report.md`  
+**结果**: 每个 profile 产出 `run_*.csv`、`profile_meta.json`、日志与图表，支持断点续跑
+
+### 串口重连与握手稳定性
+**条件**: 烧录后 CDC 设备节点短暂消失或重枚举  
+**行为**: 采样脚本对 `/dev/ttyACM*` 做重试探测，打开端口后设置 DTR/RTS；板端 force 模式启动前等待短暂 DTR 窗口  
+**结果**: 降低首段样本丢失和“端口不存在”导致的失败率
 
 输出表头固定为：
 `op,n,repeat,warmup,eigen_avg_cycles,cmsis_avg_cycles,cmsis_over_eigen,error_l2,valid,invalid,build_mode`

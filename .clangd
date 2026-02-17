@@ -70,4 +70,4 @@ Diagnostics:
       readability-identifier-naming.ClassMethodCase: CamelCase
       readability-identifier-naming.MethodCase: CamelCase
 CompileFlags:
-  CompilationDatabase: build/Debug
+  CompilationDatabase: build/Release
